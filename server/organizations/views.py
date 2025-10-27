@@ -100,5 +100,6 @@ async def create_user(org_id: str, payload: UserCreate,
     result = await db.users.insert_one(user_doc)
     user_id = result.inserted_id
     user = await db.users.find_one({"_id": user_id})
+    user["_id"] = str(user["_id"])
 
     return created_response(message="success", body=user)
