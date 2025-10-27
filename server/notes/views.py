@@ -18,6 +18,7 @@ router = APIRouter()
 
 @router.post('', status_code=status.HTTP_201_CREATED)
 async def create_note(request: Request, payload: NoteCreate):
+    org = request.state.org 
     current_user = request.state.user
     if current_user["role"] not in ("admin", "writer"):
         msg = "Access Denied"
@@ -25,7 +26,7 @@ async def create_note(request: Request, payload: NoteCreate):
 
     # create the organization document
     note_doc = payload.model_dump()
-    note_doc["organization_id"] = current_user["organization_id"]
+    note_doc["organization_id"] = org["_id"]
     note_doc["created_at"] = datetime.now(timezone.utc)
     note_doc["created_by"] = current_user["_id"]
     result = await db.notes.insert_one(note_doc)
@@ -38,10 +39,10 @@ async def create_note(request: Request, payload: NoteCreate):
 @router.get('', status_code=status.HTTP_200_OK)
 async def get_notes(request: Request, page: Optional[int] = 1,
                     page_by: Optional[int] = 20):
-    current_user = request.state.user
+    org = request.state.org 
 
     # Fetch notes belonging to the organization
-    notes_cursor = db.notes.find({"organization_id": current_user["organization_id"]})
+    notes_cursor = db.notes.find({"organization_id": org["_id"]})
     notes = await notes_cursor.to_list(length=page_by)
 
     paginated_notes = paginate(notes, params=Params(page=page, size=page_by))
@@ -53,7 +54,7 @@ async def get_notes(request: Request, page: Optional[int] = 1,
 
 @router.get('/{note_id}', status_code=status.HTTP_200_OK)
 async def get_note(request: Request, note_id:str):
-    current_user = request.state.user
+    org = request.state.org 
 
     # Ensure note_id is a valid ObjectId
     if not ObjectId.is_valid(note_id):
@@ -62,7 +63,7 @@ async def get_note(request: Request, note_id:str):
     # Find note by both note_id and organization_id
     note = await db.notes.find_one({
         "_id": ObjectId(note_id),
-        "organization_id": current_user["organization_id"]
+        "organization_id": org["_id"]
     })
     if not note:
         return resource_not_found_response("Note not found")
@@ -72,6 +73,7 @@ async def get_note(request: Request, note_id:str):
 
 @router.delete('/{note_id}', status_code=status.HTTP_200_OK)
 async def delete_note(request: Request, note_id:str):
+    org = request.state.org 
     current_user = request.state.user
     if current_user["role"] != "admin":
         msg = "Access Denied"
@@ -84,7 +86,7 @@ async def delete_note(request: Request, note_id:str):
     # Find note by both note_id and organization_id
     note = await db.notes.find_one({
         "_id": ObjectId(note_id),
-        "organization_id": current_user["organization_id"]
+        "organization_id": org["_id"]
     })
     if not note:
         return resource_not_found_response("Note not found")
