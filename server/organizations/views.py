@@ -3,7 +3,7 @@ from server.organizations.models import OrganizationCreate
 from server.db import db
 from server.main_utils import (resource_conflict_response, created_response,
                                resource_not_found_response, un_authenticated_response,
-                               un_authorized_response)
+                               un_authorized_response, to_ui_readable_datetime_format)
 from datetime import datetime, timezone
 from server.authentication.utils import generate_random_password, authorize_jwt_subject
 import bcrypt
@@ -14,7 +14,7 @@ from bson import ObjectId
 router = APIRouter()
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED)
+@router.post("", status_code=status.HTTP_201_CREATED)
 async def create_organization(payload: OrganizationCreate):
     # check if organization already exists
     existing = await db.organizations.find_one({"name": payload.name})
@@ -50,7 +50,7 @@ async def create_organization(payload: OrganizationCreate):
             "id": str(org["_id"]),
             "name": org["name"],
             "description": org["description"],
-            "created_at": org["created_at"],
+            "created_at": to_ui_readable_datetime_format(org["created_at"]),
         },
         "super_admin": {
             "email_address": admin_email,
