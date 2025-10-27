@@ -51,11 +51,11 @@ async def authentication_middleware(request: Request, call_next):
             return error_response(status.HTTP_400_BAD_REQUEST,
                                     get_data(msg))
 
-    org_id = request.headers.get('org_id')
-    if not org_id:
-        msg = "org_id is missing in the request headers"
-        return error_response(status.HTTP_400_BAD_REQUEST,
-                                get_data(msg))
+    # org_id = request.headers.get('org_id')
+    # if not org_id:
+    #     msg = "org_id is missing in the request headers"
+    #     return error_response(status.HTTP_400_BAD_REQUEST,
+    #                             get_data(msg))
     
     response = await call_next(request)
     return response
