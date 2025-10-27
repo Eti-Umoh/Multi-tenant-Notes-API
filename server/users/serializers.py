@@ -9,7 +9,7 @@ async def user_serializer(user):
         "email_address": user["email_address"],
         "role": user["role"],
         "organization_id": str(user["organization_id"]),
-        "created_at": to_ui_readable_datetime_format(user["created_at"]),
+        "created_at": to_ui_readable_datetime_format(user["created_at"])
     }
     return items
 
