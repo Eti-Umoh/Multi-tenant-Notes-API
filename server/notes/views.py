@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Request
 from server.notes.models import NoteCreate
 from server.db import db
 from server.main_utils import (give_pagination_details, success_response,
@@ -17,15 +17,8 @@ router = APIRouter()
 
 
 @router.post('', status_code=status.HTTP_201_CREATED)
-async def create_note(payload: NoteCreate,
-                      token: str = Depends(authorize_jwt_subject)):
-    email_address = token  # From authorize_jwt_subject, we get the subject which is the email
-
-    current_user = await db.users.find_one({"email_address": email_address})
-    if not current_user:
-        msg = "User not found"
-        return un_authenticated_response(msg)
-    
+async def create_note(request: Request, payload: NoteCreate):
+    current_user = request.state.user
     if current_user["role"] not in ("admin", "writer"):
         msg = "Access Denied"
         return un_authorized_response(msg)
