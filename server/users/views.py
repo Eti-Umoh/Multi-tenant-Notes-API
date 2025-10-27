@@ -1,5 +1,5 @@
 from fastapi import APIRouter, status
-from server.organizations.models import OrganizationCreate
+from server.users.models import UserCreate
 from server.db import db
 from server.main_utils import resource_conflict_response, created_response
 from datetime import datetime, timezone

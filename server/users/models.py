@@ -5,10 +5,6 @@ from bson import ObjectId
 from datetime import datetime, timezone
 from server.common import PyObjectId  # from our earlier step
 
-from pydantic import BaseModel, EmailStr, Field
-from typing import Literal, Optional
-from datetime import datetime, timezone
-from .common import PyObjectId
 
 Role = Literal["reader", "writer", "admin"]
 
