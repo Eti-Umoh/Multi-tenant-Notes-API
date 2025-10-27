@@ -1,9 +1,9 @@
 from fastapi import APIRouter, status
 from server.users.models import UserCreate
 from server.db import db
-from server.main_utils import (give_pagination_details,
-                               resource_not_found_response,
-                               success_response)
+from server.main_utils import (give_pagination_details, resource_not_found_response,
+                               success_response, un_authenticated_response,
+                               un_authorized_response)
 from datetime import datetime, timezone
 from server.authentication.utils import authorize_jwt_subject
 from bson import ObjectId
@@ -19,10 +19,21 @@ router = APIRouter()
 @router.get("/{org_id}", status_code=status.HTTP_200_OK)
 async def get_users_by_org(org_id: str, token: str = Depends(authorize_jwt_subject),
                            page: Optional[int] = 1, page_by: Optional[int] = 20,):
+    email_address = token  # From authorize_jwt_subject, we get the subject which is the email
+
+    current_user = await db.users.find_one({"email_address": email_address})
+    if not current_user:
+        msg = "Please Log In"
+        return un_authenticated_response(msg)
+    
     # Ensure org exists
     org = await db.organizations.find_one({"_id": ObjectId(org_id)})
     if not org:
         return resource_not_found_response("Organization not found")
+    
+    if str(current_user["organization_id"]) != org_id:
+        msg = f"You Are Not Part Of The Organization :{org_id}"
+        return un_authorized_response(msg)
 
     # Fetch users belonging to the organization
     users_cursor = db.users.find({"organization_id": ObjectId(org_id)})
@@ -33,5 +44,6 @@ async def get_users_by_org(org_id: str, token: str = Depends(authorize_jwt_subje
 
     return success_response(
         message="Successfully retrieved users",
-        body=await users_serializer(users)
+        body=await users_serializer(users),
+        pagination=pagination_details
     )
