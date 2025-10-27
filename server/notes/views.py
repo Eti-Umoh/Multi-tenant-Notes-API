@@ -36,14 +36,9 @@ async def create_note(request: Request, payload: NoteCreate):
 
 
 @router.get('', status_code=status.HTTP_200_OK)
-async def get_notes(token: str = Depends(authorize_jwt_subject),
-                    page: Optional[int] = 1, page_by: Optional[int] = 20):
-    email_address = token  # From authorize_jwt_subject, we get the subject which is the email
-
-    current_user = await db.users.find_one({"email_address": email_address})
-    if not current_user:
-        msg = "User not found"
-        return un_authenticated_response(msg)
+async def get_notes(request: Request, page: Optional[int] = 1,
+                    page_by: Optional[int] = 20):
+    current_user = request.state.user
 
     # Fetch notes belonging to the organization
     notes_cursor = db.notes.find({"organization_id": current_user["organization_id"]})
@@ -57,13 +52,7 @@ async def get_notes(token: str = Depends(authorize_jwt_subject),
 
 
 @router.get('/{note_id}', status_code=status.HTTP_200_OK)
-async def get_note(note_id:str, token: str = Depends(authorize_jwt_subject)):
-    email_address = token  # From authorize_jwt_subject, we get the subject which is the email
-
-    current_user = await db.users.find_one({"email_address": email_address})
-    if not current_user:
-        msg = "User not found"
-        return un_authenticated_response(msg)
+async def get_note(request: Request, note_id:str):
     
     # Ensure note_id is a valid ObjectId
     if not ObjectId.is_valid(note_id):
