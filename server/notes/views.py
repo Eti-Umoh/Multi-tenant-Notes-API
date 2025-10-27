@@ -114,4 +114,4 @@ async def delete_note(note_id:str, token: str = Depends(authorize_jwt_subject)):
         "organization_id": current_user["organization_id"]
     })
 
-    return success_response(message="success", body=await note_serializer(note))
+    return success_response(message="Note deleted successfully", body={})
