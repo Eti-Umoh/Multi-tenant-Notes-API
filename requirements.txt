@@ -13,6 +13,7 @@ dnspython==2.8.0
 ecdsa==0.19.1
 email-validator==2.3.0
 fastapi==0.120.0
+fastapi-pagination==0.14.3
 h11==0.16.0
 idna==3.11
 jwt==1.4.0
