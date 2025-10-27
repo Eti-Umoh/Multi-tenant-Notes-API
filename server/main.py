@@ -6,8 +6,10 @@ from server.authentication.views import router as AuthRouter
 from server.organizations.views import router as OrgRouter
 from server.notes.views import router as NoteRouter
 from server.config import settings
-from server.main_utils import error_response
+from server.main_utils import error_response, resource_not_found_response
 from server.db import db
+from bson import ObjectId
+from server.authentication.utils import authorize_jwt_subject
 
 
 tags_metadata = [
@@ -32,10 +34,51 @@ app = FastAPI(
 )
 
 
+#MIDDLEWARE THAT AUTOMATICALLY EXTRACT TENANT/USER FROM HEADERS
 @app.middleware("http")
 async def authentication_middleware(request: Request, call_next):
     def get_data(msg):
         return {"detail": msg}
+    
+    routes_without_auth = ["/api/v1/organizations", "/api/v1/auth/login"]
+
+    if not request.url.path == "/api/v1/organizations" and request.method in ("POST"):
+        org_id = request.headers.get('org_id')
+        if not org_id:
+            msg = "Org-ID is missing in the request headers"
+            return error_response(status.HTTP_400_BAD_REQUEST,
+                                    get_data(msg))
+        
+        # ensure org exists
+        org = await db.organizations.find_one({"_id": ObjectId(org_id)})
+        if not org:
+            msg = "Invalid Org-ID specified in the request headers"
+            return error_response(status.HTTP_400_BAD_REQUEST, get_data(msg))
+        
+        # Attach org to request.state
+        request.state.org = org #EXTRACT TENANT
+        
+    if request.url.path not in routes_without_auth:
+        # Extract token manually from header
+        auth_header = request.headers.get("Authorization")
+        if not auth_header or not auth_header.startswith("Bearer "):
+            msg = "Missing or invalid Authorization header"
+            return error_response(status.HTTP_401_UNAUTHORIZED, get_data(msg))
+
+        token = auth_header.split(" ")[1]
+        email_address = authorize_jwt_subject(token)
+
+        # Get user from DB
+        current_user = await db.users.find_one({
+            "email_address": email_address,
+            "organization_id": ObjectId(org_id)
+            })
+        if not current_user:
+            msg = "User not found"
+            return error_response(status.HTTP_401_UNAUTHORIZED, get_data(msg))
+
+        # Attach user to request.state
+        request.state.user = current_user #EXTRACT USER
     
     response = await call_next(request)
     return response
