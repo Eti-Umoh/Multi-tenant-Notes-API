@@ -38,10 +38,10 @@ async def create_organization(payload: OrganizationCreate):
         "first_name": "Super",
         "last_name": "Admin",
         "email_address": admin_email,
-        "password": hashed,
         "role": "admin",
         "organization_id": org_id,
         "created_at": datetime.now(timezone.utc),
+        "password": hashed
     }
 
     await db.users.insert_one(admin_user)
