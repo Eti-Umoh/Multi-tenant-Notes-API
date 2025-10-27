@@ -10,6 +10,7 @@ import bcrypt
 from server.users.models import UserCreate
 from fastapi.params import Depends
 from bson import ObjectId
+from server.organizations.serializers import org_serializer
 
 router = APIRouter()
 
@@ -46,12 +47,7 @@ async def create_organization(payload: OrganizationCreate):
     org = await db.organizations.find_one({"_id": org_id})
 
     data_dict = {
-        "organization": {
-            "id": str(org["_id"]),
-            "name": org["name"],
-            "description": org["description"],
-            "created_at": to_ui_readable_datetime_format(org["created_at"]),
-        },
+        "organization": await org_serializer(org),
         "super_admin": {
             "email_address": admin_email,
             "password": admin_password,
@@ -62,7 +58,7 @@ async def create_organization(payload: OrganizationCreate):
                             body=data_dict)
 
 
-@router.post('/{org_id}/users')
+@router.post('/{org_id}/users', status_code=status.HTTP_201_CREATED)
 async def create_user(org_id: str, payload: UserCreate,
                       token: str = Depends(authorize_jwt_subject)):
     email_address = token  # From authorize_jwt_subject, we get the subject which is the email

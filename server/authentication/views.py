@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Request, status
 from server.authentication.schemas import LoginUser
 from server.db import db
 import bcrypt
@@ -9,7 +9,7 @@ from server.authentication.utils import create_access_token
 router = APIRouter()
 
 
-@router.post('/login')
+@router.post('/login', status_code=status.HTTP_200_OK)
 async def login_user(request: Request, payload: LoginUser):
     user = await db.users.find_one({"email_address": payload.email_address})
     if user:
