@@ -42,17 +42,17 @@ async def authentication_middleware(request: Request, call_next):
     
     routes_without_auth = ["/api/v1/organizations", "/api/v1/auth/login"]
 
-    if not request.url.path == "/api/v1/organizations" and request.method in ("POST"):
+    if not request.url.path == "/api/v1/organizations":
         org_id = request.headers.get('org_id')
         if not org_id:
-            msg = "Org-ID is missing in the request headers"
+            msg = "org_id is missing in the request headers"
             return error_response(status.HTTP_400_BAD_REQUEST,
                                     get_data(msg))
         
         # ensure org exists
         org = await db.organizations.find_one({"_id": ObjectId(org_id)})
         if not org:
-            msg = "Invalid Org-ID specified in the request headers"
+            msg = "Invalid org_id specified in the request headers"
             return error_response(status.HTTP_400_BAD_REQUEST, get_data(msg))
         
         # Attach org to request.state
@@ -68,7 +68,7 @@ async def authentication_middleware(request: Request, call_next):
 
             token = auth_header.split(" ")[1]
             email_address = authorize_jwt_subject(token)
-            
+
         except HTTPException as e:
             return error_response(e.status_code, get_data(e.detail))
         except Exception as e:

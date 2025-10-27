@@ -53,6 +53,7 @@ async def get_notes(request: Request, page: Optional[int] = 1,
 
 @router.get('/{note_id}', status_code=status.HTTP_200_OK)
 async def get_note(request: Request, note_id:str):
+    current_user = request.state.user
     
     # Ensure note_id is a valid ObjectId
     if not ObjectId.is_valid(note_id):
