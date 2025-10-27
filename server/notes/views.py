@@ -96,6 +96,10 @@ async def delete_note(note_id:str, token: str = Depends(authorize_jwt_subject)):
         msg = "User not found"
         return un_authenticated_response(msg)
     
+    if current_user["role"] != "admin":
+        msg = "Access Denied"
+        return un_authorized_response(msg)
+    
     # Ensure note_id is a valid ObjectId
     if not ObjectId.is_valid(note_id):
         return bad_request_response("Invalid note ID")
