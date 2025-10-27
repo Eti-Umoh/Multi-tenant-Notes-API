@@ -12,7 +12,10 @@ router = APIRouter()
 
 @router.post('/login', status_code=status.HTTP_200_OK)
 async def login_user(request: Request, payload: LoginUser):
-    user = await db.users.find_one({"email_address": payload.email_address})
+    org = request.state.org 
+
+    user = await db.users.find_one({"email_address": payload.email_address,
+                                    "organization_id": org["_id"]})
     if user:
         # Convert password to bytes
         password_bytes = payload.password.encode()
