@@ -1,9 +1,13 @@
 annotated-doc==0.0.3
 annotated-types==0.7.0
 anyio==4.11.0
+cffi==2.0.0
+cryptography==46.0.3
 fastapi==0.120.0
 idna==3.11
 jose==1.0.0
+jwt==1.4.0
+pycparser==2.23
 pydantic==2.12.3
 pydantic-settings==2.11.0
 pydantic_core==2.41.4

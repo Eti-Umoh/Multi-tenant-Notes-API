@@ -1,7 +1,8 @@
 import logging
+import jwt
 from server.config import settings
 from datetime import datetime, timedelta, timezone
-from jose import jwt, JWTError
+from jose import JWTError
 from fastapi import HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import ExpiredSignatureError
