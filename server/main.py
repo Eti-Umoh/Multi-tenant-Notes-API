@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request, status, HTTPException
 from fastapi import APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from server.users.views import router as UserRouter
@@ -59,14 +59,21 @@ async def authentication_middleware(request: Request, call_next):
         request.state.org = org #EXTRACT TENANT
         
     if request.url.path not in routes_without_auth:
-        # Extract token manually from header
-        auth_header = request.headers.get("Authorization")
-        if not auth_header or not auth_header.startswith("Bearer "):
-            msg = "Missing or invalid Authorization header"
-            return error_response(status.HTTP_401_UNAUTHORIZED, get_data(msg))
+        try:
+            # Extract token manually from header
+            auth_header = request.headers.get("Authorization")
+            if not auth_header or not auth_header.startswith("Bearer "):
+                msg = "Missing or invalid Authorization header"
+                return error_response(status.HTTP_401_UNAUTHORIZED, get_data(msg))
 
-        token = auth_header.split(" ")[1]
-        email_address = authorize_jwt_subject(token)
+            token = auth_header.split(" ")[1]
+            email_address = authorize_jwt_subject(token)
+            
+        except HTTPException as e:
+            return error_response(e.status_code, get_data(e.detail))
+        except Exception as e:
+            msg = "Invalid or expired token"
+            return error_response(status.HTTP_401_UNAUTHORIZED, get_data(msg))
 
         # Get user from DB
         current_user = await db.users.find_one({
