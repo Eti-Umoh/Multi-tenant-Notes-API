@@ -1,7 +1,6 @@
-from pydantic import BaseModel, EmailStr, Field
-from typing import Optional
+from pydantic import BaseModel, Field
 from bson import ObjectId
-from datetime import datetime
+from datetime import datetime, timezone
 from server.common import PyObjectId  # from our earlier step
 
 class OrgBase(BaseModel):
