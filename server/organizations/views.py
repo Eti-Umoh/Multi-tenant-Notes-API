@@ -64,7 +64,7 @@ async def create_user(org_id: str, payload: UserCreate,
                       token: str = Depends(authorize_jwt_subject)):
     email_address = token  # From authorize_jwt_subject, we get the subject which is the email
 
-    current_user = await db.users.find_one({"email": email_address})
+    current_user = await db.users.find_one({"email_address": email_address})
     if not current_user:
         msg = "Please Log In"
         return un_authenticated_response(msg)
@@ -74,7 +74,7 @@ async def create_user(org_id: str, payload: UserCreate,
     if not org:
         return resource_not_found_response("Organization not found")
     
-    if current_user["organization_id"] != org_id:
+    if str(current_user["organization_id"]) != org_id:
         msg = f"You Are Not Part Of The Organization :{org_id}"
         return un_authorized_response(msg)
     
@@ -82,12 +82,9 @@ async def create_user(org_id: str, payload: UserCreate,
         msg = "Only Admins can add new users"
         return un_authorized_response(msg)
 
-    existing = await db.users.find_one({"email": payload.email_address})
+    existing = await db.users.find_one({"email_address": payload.email_address})
     if existing:
         return resource_conflict_response("Email Already Exists")
-    
-    if payload.role not in ("reader", "writer", "admin"):
-        return bad_request_response("Invalid 'role' specified")
     
     # Convert password to bytes and hash it
     password = generate_random_password(10)
@@ -95,7 +92,7 @@ async def create_user(org_id: str, payload: UserCreate,
 
     # create the organization document
     user_doc = payload.model_dump()
-    user_doc["organization_id"] = org_id
+    user_doc["organization_id"] = ObjectId(org_id)
     user_doc["created_at"] = datetime.now(timezone.utc)
     user_doc["password"] = hashed
     result = await db.users.insert_one(user_doc)

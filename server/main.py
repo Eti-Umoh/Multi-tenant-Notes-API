@@ -36,20 +36,6 @@ app = FastAPI(
 async def authentication_middleware(request: Request, call_next):
     def get_data(msg):
         return {"detail": msg}
-    token_condition = ((request.url.path.startswith("/api/v1/organizations"))
-                       or (request.url.path.startswith("/api/v1/auth/login"))
-                       )
-    if token_condition:
-        secret = request.headers.get('Secret')
-        if not secret:
-            msg = "Secret is missing in the request headers"
-            return error_response(status.HTTP_400_BAD_REQUEST,
-                                    get_data(msg))
-        
-        elif secret != settings.SECRET:
-            msg = "Invalid Secret specified in the request headers"
-            return error_response(status.HTTP_400_BAD_REQUEST,
-                                    get_data(msg))
     
     response = await call_next(request)
     return response
