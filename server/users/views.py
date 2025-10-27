@@ -1,24 +1,41 @@
 from fastapi import APIRouter, status
 from server.users.models import UserCreate
 from server.db import db
-from server.main_utils import resource_conflict_response, created_response
+from server.main_utils import (resource_conflict_response, created_response,
+                               resource_not_found_response, un_authenticated_response,
+                               un_authorized_response)
 from datetime import datetime, timezone
-from server.authentication.utils import generate_random_password
+from server.authentication.utils import generate_random_password, authorize_jwt_subject
 import bcrypt
+from fastapi.params import Depends
+from bson import ObjectId
 
 
 router = APIRouter()
 
 
-@router.post('/admin/create')
-async def provision_admin(request: Request, payload: CreateAdmin,
-                          token: str = Depends(authorize_jwt_subject), db: Session = Depends(get_db)):
+@router.post('/{org_id}/users')
+async def create_user(org_id: str, payload: UserCreate,
+                      token: str = Depends(authorize_jwt_subject)):
     email_address = token  # From authorize_jwt_subject, we get the subject which is the email
 
-    current_user = await get_user_by_email(email_address, db)
+    current_user = await db.users.find_one({"email": email_address})
     if not current_user:
         msg = "User not found, Please Log In"
+        return un_authenticated_response(msg)
+    
+    if current_user["organization_id"] != org_id:
+        msg = "Only Admins can add a new admin"
         return un_authorized_response(msg)
+    
+    # ensure org exists
+    org = await db.organizations.find_one({"_id": ObjectId(org_id)})
+    if not org:
+        return resource_not_found_response("Organization not found")
+
+    existing = await db.users.find_one({"email": payload.email})
+    if existing:
+        raise HTTPException(409, "Email already exists")
     
     if current_user.user_type != UserTypes.ADMIN:
         msg = "Only Admins can add a new admin"

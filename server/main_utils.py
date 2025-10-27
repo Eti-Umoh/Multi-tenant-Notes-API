@@ -11,11 +11,11 @@ def bad_request_response(msg):
 
 
 def un_authorized_response(msg):
-    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=msg)
+    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=msg)
 
 
 def un_authenticated_response(msg):
-    raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=msg)
+    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=msg)
 
 
 def resource_conflict_response(msg):
