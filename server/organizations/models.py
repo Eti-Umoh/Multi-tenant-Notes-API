@@ -4,16 +4,15 @@ from typing import Optional
 from datetime import datetime, timezone
 from server.common import PyObjectId  # from our earlier step
 
-class OrganizationBase(BaseModel):
+class OrganizationCreate(BaseModel):
     name: str
     description: Optional[str] = None
-    
 
-class OrganizationCreate(OrganizationBase):
-    pass
 
-class OrganizationOut(OrganizationBase):
+class OrganizationOut(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    name: str
+    description: Optional[str] = None
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 

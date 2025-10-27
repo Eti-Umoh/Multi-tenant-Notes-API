@@ -16,7 +16,7 @@ from server.users.serializers import user_serializer
 router = APIRouter()
 
 
-@router.post("", status_code=status.HTTP_201_CREATED)
+@router.post('', status_code=status.HTTP_201_CREATED)
 async def create_organization(payload: OrganizationCreate):
     # check if organization already exists
     existing = await db.organizations.find_one({"name": payload.name})
