@@ -7,6 +7,7 @@ from server.organizations.views import router as OrgRouter
 from server.notes.views import router as NoteRouter
 from server.config import settings
 from server.main_utils import error_response
+from server.db import db
 
 
 tags_metadata = [
@@ -86,3 +87,9 @@ app.include_router(api_router)
 @app.get("/", tags=["Root"])
 async def read_root() -> dict:
     return {"message": "Multi-tenant Notes API!"}
+
+
+@app.get("/test-db")
+async def test_db():
+    collections = await db.list_collection_names()
+    return {"collections": collections}
