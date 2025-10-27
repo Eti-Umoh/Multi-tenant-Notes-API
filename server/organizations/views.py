@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Request
 from server.organizations.models import OrganizationCreate
 from server.db import db
 from server.main_utils import (resource_conflict_response, created_response,
@@ -60,14 +60,8 @@ async def create_organization(payload: OrganizationCreate):
 
 
 @router.post('/{org_id}/users', status_code=status.HTTP_201_CREATED)
-async def create_user(org_id: str, payload: UserCreate,
-                      token: str = Depends(authorize_jwt_subject)):
-    email_address = token  # From authorize_jwt_subject, we get the subject which is the email
-
-    current_user = await db.users.find_one({"email_address": email_address})
-    if not current_user:
-        msg = "User not found"
-        return un_authenticated_response(msg)
+async def create_user(request:Request, org_id: str, payload: UserCreate):
+    current_user = request.state.user
     
     # ensure org exists
     org = await db.organizations.find_one({"_id": ObjectId(org_id)})
