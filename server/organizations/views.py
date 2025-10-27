@@ -76,7 +76,10 @@ async def create_user(request:Request, org_id: str, payload: UserCreate):
         msg = "Only Admins can add new users"
         return un_authorized_response(msg)
 
-    existing = await db.users.find_one({"email_address": payload.email_address})
+    existing = await db.users.find_one({
+            "email_address": payload.email_address,
+            "organization_id": ObjectId(org_id)
+            })
     if existing:
         return resource_conflict_response("Email Already Exists")
     
@@ -84,7 +87,7 @@ async def create_user(request:Request, org_id: str, payload: UserCreate):
     password = generate_random_password(10)
     hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
-    # create the organization document
+    # create the user document
     user_doc = payload.model_dump()
     user_doc["organization_id"] = ObjectId(org_id)
     user_doc["created_at"] = datetime.now(timezone.utc)
