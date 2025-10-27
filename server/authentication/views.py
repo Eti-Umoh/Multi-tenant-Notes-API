@@ -5,6 +5,7 @@ import bcrypt
 from server.main_utils import (un_authorized_response, success_response,
                                internal_server_error_response)
 from server.authentication.utils import create_access_token
+from server.users.serializers import user_serializer
 
 router = APIRouter()
 
@@ -21,12 +22,12 @@ async def login_user(request: Request, payload: LoginUser):
         msg = "Invalid Email or Password"
         return un_authorized_response(msg)
 
-    access_token = create_access_token(user.email_address)
+    access_token = create_access_token(user["email_address"])
     if not access_token:
         msg = "Error generating access token"
         return internal_server_error_response(msg)
 
     return success_response(message="successful",
-                            body={"user": user,
+                            body={"user": await user_serializer(user),
                                   "access-token": access_token,
                                   "token_type": "bearer"})
