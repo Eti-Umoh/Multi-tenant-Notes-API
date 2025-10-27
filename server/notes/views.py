@@ -3,7 +3,8 @@ from server.notes.models import NoteCreate
 from server.db import db
 from server.main_utils import (give_pagination_details, success_response,
                                un_authenticated_response, un_authorized_response,
-                               created_response)
+                               created_response, bad_request_response,
+                               resource_not_found_response)
 from datetime import datetime, timezone
 from server.authentication.utils import authorize_jwt_subject
 from bson import ObjectId
@@ -43,7 +44,7 @@ async def create_note(payload: NoteCreate,
 
 @router.get('', status_code=status.HTTP_200_OK)
 async def get_notes(token: str = Depends(authorize_jwt_subject),
-                    page: Optional[int] = 1, page_by: Optional[int] = 20,):
+                    page: Optional[int] = 1, page_by: Optional[int] = 20):
     email_address = token  # From authorize_jwt_subject, we get the subject which is the email
 
     current_user = await db.users.find_one({"email_address": email_address})
@@ -60,3 +61,27 @@ async def get_notes(token: str = Depends(authorize_jwt_subject),
 
     return success_response(message="success", body=await notes_serializer(notes),
                             pagination=pagination_details)
+
+
+@router.get('/{note_id}', status_code=status.HTTP_200_OK)
+async def get_note(note_id:str, token: str = Depends(authorize_jwt_subject)):
+    email_address = token  # From authorize_jwt_subject, we get the subject which is the email
+
+    current_user = await db.users.find_one({"email_address": email_address})
+    if not current_user:
+        msg = "User not found"
+        return un_authenticated_response(msg)
+    
+    # Ensure note_id is a valid ObjectId
+    if not ObjectId.is_valid(note_id):
+        return bad_request_response("Invalid note ID")
+
+    # Find note by both note_id and organization_id
+    note = await db.notes.find_one({
+        "_id": ObjectId(note_id),
+        "organization_id": current_user["organization_id"]
+    })
+    if not note:
+        return resource_not_found_response("Note not found")
+
+    return success_response(message="success", body=await note_serializer(note))
