@@ -54,7 +54,7 @@ async def get_notes(request: Request, page: Optional[int] = 1,
 @router.get('/{note_id}', status_code=status.HTTP_200_OK)
 async def get_note(request: Request, note_id:str):
     current_user = request.state.user
-    
+
     # Ensure note_id is a valid ObjectId
     if not ObjectId.is_valid(note_id):
         return bad_request_response("Invalid note ID")
@@ -71,14 +71,8 @@ async def get_note(request: Request, note_id:str):
 
 
 @router.delete('/{note_id}', status_code=status.HTTP_200_OK)
-async def delete_note(note_id:str, token: str = Depends(authorize_jwt_subject)):
-    email_address = token  # From authorize_jwt_subject, we get the subject which is the email
-
-    current_user = await db.users.find_one({"email_address": email_address})
-    if not current_user:
-        msg = "User not found"
-        return un_authenticated_response(msg)
-    
+async def delete_note(request: Request, note_id:str):
+    current_user = request.state.user
     if current_user["role"] != "admin":
         msg = "Access Denied"
         return un_authorized_response(msg)
