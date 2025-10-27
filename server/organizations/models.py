@@ -3,14 +3,14 @@ from bson import ObjectId
 from datetime import datetime, timezone
 from server.common import PyObjectId  # from our earlier step
 
-class OrgBase(BaseModel):
+class OrganizationBase(BaseModel):
     name: str
     
 
-class OrgCreate(OrgBase):
+class OrganizationCreate(OrganizationBase):
     pass
 
-class OrgInDB(OrgBase):
+class OrganizationInDB(OrganizationBase):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     updated_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
