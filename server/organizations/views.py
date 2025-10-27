@@ -30,7 +30,7 @@ async def create_organization(payload: OrganizationCreate):
     admin_user = {
         "first_name": "Super",
         "last_name": "Admin",
-        "email": admin_email,
+        "email_address": admin_email,
         "password": hashed,
         "role": "admin",
         "organization_id": org_id,
@@ -48,7 +48,7 @@ async def create_organization(payload: OrganizationCreate):
             "created_at": org["created_at"],
         },
         "super_admin": {
-            "email": admin_email,
+            "email_address": admin_email,
             "password": admin_password,
         }
     }
