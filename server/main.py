@@ -45,6 +45,7 @@ async def authentication_middleware(request: Request, call_next):
             msg = "Secret is missing in the request headers"
             return error_response(status.HTTP_400_BAD_REQUEST,
                                     get_data(msg))
+        
         elif secret != settings.SECRET:
             msg = "Invalid Secret specified in the request headers"
             return error_response(status.HTTP_400_BAD_REQUEST,
