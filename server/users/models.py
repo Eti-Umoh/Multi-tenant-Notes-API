@@ -11,7 +11,7 @@ Role = Literal["reader", "writer", "admin"]
 class UserCreate(BaseModel):
     first_name: str
     last_name: str
-    email: EmailStr
+    email_address: EmailStr
     password: str
     role: Role
 
@@ -19,7 +19,7 @@ class UserOut(BaseModel):
     id: PyObjectId = Field(alias="_id")
     first_name: str
     last_name: str
-    email: EmailStr
+    email_address: EmailStr
     role: Role
     organization_id: PyObjectId
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
