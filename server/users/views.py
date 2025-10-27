@@ -16,8 +16,8 @@ from typing import Optional
 router = APIRouter()
 
 
-@router.get("/{org_id}", status_code=status.HTTP_200_OK)
-async def get_users_by_org(org_id: str, token: str = Depends(authorize_jwt_subject),
+@router.get("", status_code=status.HTTP_200_OK)
+async def get_users_by_org(token: str = Depends(authorize_jwt_subject),
                            page: Optional[int] = 1, page_by: Optional[int] = 20,):
     email_address = token  # From authorize_jwt_subject, we get the subject which is the email
 
@@ -25,18 +25,9 @@ async def get_users_by_org(org_id: str, token: str = Depends(authorize_jwt_subje
     if not current_user:
         msg = "Please Log In"
         return un_authenticated_response(msg)
-    
-    # Ensure org exists
-    org = await db.organizations.find_one({"_id": ObjectId(org_id)})
-    if not org:
-        return resource_not_found_response("Organization not found")
-    
-    if str(current_user["organization_id"]) != org_id:
-        msg = f"You Are Not Part Of The Organization :{org_id}"
-        return un_authorized_response(msg)
 
     # Fetch users belonging to the organization
-    users_cursor = db.users.find({"organization_id": ObjectId(org_id)})
+    users_cursor = db.users.find({"organization_id": current_user["organization_id"]})
     users = await users_cursor.to_list(length=page_by)
 
     paginated_users = paginate(users, params=Params(page=page, size=page_by))
