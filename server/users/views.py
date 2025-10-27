@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.get('', status_code=status.HTTP_200_OK)
 async def get_users_by_org(token: str = Depends(authorize_jwt_subject),
-                           page: Optional[int] = 1, page_by: Optional[int] = 20,):
+                           page: Optional[int] = 1, page_by: Optional[int] = 20):
     email_address = token  # From authorize_jwt_subject, we get the subject which is the email
 
     current_user = await db.users.find_one({"email_address": email_address})
@@ -30,6 +30,6 @@ async def get_users_by_org(token: str = Depends(authorize_jwt_subject),
 
     return success_response(
         message="Successfully retrieved users",
-        body=await users_serializer(users),
+        body=await users_serializer(paginated_users),
         pagination=pagination_details
     )

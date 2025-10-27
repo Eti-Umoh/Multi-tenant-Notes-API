@@ -39,3 +39,24 @@ async def create_note(payload: NoteCreate,
     note = await db.notes.find_one({"_id": note_id})
 
     return created_response(message="success", body=await note_serializer(note))
+
+
+@router.get('', status_code=status.HTTP_200_OK)
+async def get_notes(token: str = Depends(authorize_jwt_subject),
+                    page: Optional[int] = 1, page_by: Optional[int] = 20,):
+    email_address = token  # From authorize_jwt_subject, we get the subject which is the email
+
+    current_user = await db.users.find_one({"email_address": email_address})
+    if not current_user:
+        msg = "User not found"
+        return un_authenticated_response(msg)
+
+    # Fetch notes belonging to the organization
+    notes_cursor = db.notes.find({"organization_id": current_user["organization_id"]})
+    notes = await notes_cursor.to_list(length=page_by)
+
+    paginated_notes = paginate(notes, params=Params(page=page, size=page_by))
+    pagination_details = give_pagination_details(paginated_notes)
+
+    return success_response(message="success", body=await notes_serializer(paginated_notes),
+                            pagination=pagination_details)
