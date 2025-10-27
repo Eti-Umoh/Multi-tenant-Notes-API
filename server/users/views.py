@@ -23,7 +23,7 @@ async def get_users_by_org(token: str = Depends(authorize_jwt_subject),
 
     current_user = await db.users.find_one({"email_address": email_address})
     if not current_user:
-        msg = "Please Log In"
+        msg = "User not found"
         return un_authenticated_response(msg)
 
     # Fetch users belonging to the organization

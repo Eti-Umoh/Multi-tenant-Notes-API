@@ -66,7 +66,7 @@ async def create_user(org_id: str, payload: UserCreate,
 
     current_user = await db.users.find_one({"email_address": email_address})
     if not current_user:
-        msg = "Please Log In"
+        msg = "User not found"
         return un_authenticated_response(msg)
     
     # ensure org exists
