@@ -1,32 +1,27 @@
-from fastapi import APIRouter, Request
-
-router = APIRouter()
-
-
-# server/users/views.py
-from fastapi import APIRouter, HTTPException, status
-from server.users.utils import create_user, get_user_by_email, get_user_by_phone
+from fastapi import APIRouter, status
 from server.organizations.models import OrganizationCreate
+from server.db import db
+from server.main_utils import resource_conflict_response
+from datetime import datetime, timezone
 
 router = APIRouter()
+
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def provision_organization(payload: OrganizationCreate):
-    # Check duplicates
-    existing_user = await get_user_by_email(payload.email_address.lower())
-    if existing_user:
-        raise HTTPException(status_code=409, detail="User with that email already exists")
+async def create_organization(payload: OrganizationCreate):
+    # check if organization already exists
+    existing = await db.organizations.find_one({"name": payload.name})
+    if existing:
+        return resource_conflict_response("Organization already exists") 
 
-    existing_phone = await get_user_by_phone(payload.phone_number)
-    if existing_phone:
-        raise HTTPException(status_code=409, detail="User with that phone number already exists")
+    # create the organization document
+    org_doc = payload.model_dump()
+    org_doc["created_at"] = org_doc["updated_at"] = datetime.now(timezone.utc)
+    result = await db.organizations.insert_one(org_doc)
+    org_id = result.inserted_id
 
-    # Create user
-    new_user = await create_user(payload)
-    if not new_user:
-        raise HTTPException(status_code=500, detail="Create user failed")
-
-    return {
-        "message": "User created successfully",
-        "data": new_user
-    }
+    # Create initial admin user
+    admin_email = f"admin@{payload.name.lower().replace(' ', '')}.com"
+    admin_password = generate_random_password(10)
+    hashed = bcrypt.hashpw(admin_password.encode(), bcrypt.gensalt()).decode()
+    

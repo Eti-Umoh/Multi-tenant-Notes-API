@@ -6,6 +6,7 @@ from jose import JWTError
 from fastapi import HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 from jose import ExpiredSignatureError
+import random, string
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -38,3 +39,9 @@ def authorize_jwt_subject(token: str = Depends(oauth2_scheme)):
         raise HTTPException(status_code=401, detail="Token has expired, Please Log In")
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid token, Please Log In")
+
+
+def generate_random_password(length: int = 10) -> str:
+    """Generate a random alphanumeric password"""
+    chars = string.ascii_letters + string.digits
+    return ''.join(random.choice(chars) for _ in range(length))
