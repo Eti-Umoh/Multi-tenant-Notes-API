@@ -11,6 +11,7 @@ from server.users.models import UserCreate
 from fastapi.params import Depends
 from bson import ObjectId
 from server.organizations.serializers import org_serializer
+from server.users.serializers import user_serializer
 
 router = APIRouter()
 
@@ -65,7 +66,7 @@ async def create_user(org_id: str, payload: UserCreate,
 
     current_user = await db.users.find_one({"email": email_address})
     if not current_user:
-        msg = "User not found, Please Log In"
+        msg = "Please Log In"
         return un_authenticated_response(msg)
     
     # ensure org exists
@@ -86,16 +87,20 @@ async def create_user(org_id: str, payload: UserCreate,
         return resource_conflict_response("Email Already Exists")
     
     # Convert password to bytes and hash it
-    password = payload.password
+    password = generate_random_password(10)
     hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
     # create the organization document
     user_doc = payload.model_dump()
-    user_doc["created_at"] = datetime.now(timezone.utc)
     user_doc["organization_id"] = org_id
+    user_doc["created_at"] = datetime.now(timezone.utc)
+    user_doc["password"] = hashed
     result = await db.users.insert_one(user_doc)
     user_id = result.inserted_id
     user = await db.users.find_one({"_id": user_id})
-    user["_id"] = str(user["_id"])
 
-    return created_response(message="success", body=user)
+    data_dict = {
+        "user": await user_serializer(user),
+        "password": password
+    }
+    return created_response(message="success", body=data_dict)
