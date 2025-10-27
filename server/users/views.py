@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, Request
 from server.db import db
 from server.main_utils import (give_pagination_details, success_response,
                                un_authenticated_response)
@@ -12,17 +12,12 @@ router = APIRouter()
 
 
 @router.get('', status_code=status.HTTP_200_OK)
-async def get_users_by_org(token: str = Depends(authorize_jwt_subject),
-                           page: Optional[int] = 1, page_by: Optional[int] = 20):
-    email_address = token  # From authorize_jwt_subject, we get the subject which is the email
-
-    current_user = await db.users.find_one({"email_address": email_address})
-    if not current_user:
-        msg = "User not found"
-        return un_authenticated_response(msg)
+async def get_users_by_org(request: Request, page: Optional[int] = 1,
+                           page_by: Optional[int] = 20):
+    org = request.state.org 
 
     # Fetch users belonging to the organization
-    users_cursor = db.users.find({"organization_id": current_user["organization_id"]})
+    users_cursor = db.users.find({"organization_id": org["_id"]})
     users = await users_cursor.to_list(length=page_by)
 
     paginated_users = paginate(users, params=Params(page=page, size=page_by))
