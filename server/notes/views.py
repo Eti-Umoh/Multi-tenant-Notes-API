@@ -94,7 +94,7 @@ async def delete_note(request: Request, note_id:str):
     # Perform deletion
     await db.notes.delete_one({
         "_id": ObjectId(note_id),
-        "organization_id": current_user["organization_id"]
+        "organization_id": org["_id"]
     })
 
     return success_response(message="Note deleted successfully", body={})
