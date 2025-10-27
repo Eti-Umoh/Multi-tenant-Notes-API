@@ -30,6 +30,6 @@ async def get_users_by_org(token: str = Depends(authorize_jwt_subject),
 
     return success_response(
         message="Successfully retrieved users",
-        body=await users_serializer(paginated_users),
+        body=await users_serializer(users),
         pagination=pagination_details
     )

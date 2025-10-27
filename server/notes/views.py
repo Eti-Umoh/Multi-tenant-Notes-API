@@ -58,5 +58,5 @@ async def get_notes(token: str = Depends(authorize_jwt_subject),
     paginated_notes = paginate(notes, params=Params(page=page, size=page_by))
     pagination_details = give_pagination_details(paginated_notes)
 
-    return success_response(message="success", body=await notes_serializer(paginated_notes),
+    return success_response(message="success", body=await notes_serializer(notes),
                             pagination=pagination_details)
