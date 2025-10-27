@@ -3,7 +3,7 @@ from server.organizations.models import OrganizationCreate
 from server.db import db
 from server.main_utils import (resource_conflict_response, created_response,
                                resource_not_found_response, un_authenticated_response,
-                               un_authorized_response, to_ui_readable_datetime_format)
+                               un_authorized_response, bad_request_response)
 from datetime import datetime, timezone
 from server.authentication.utils import generate_random_password, authorize_jwt_subject
 import bcrypt
@@ -85,6 +85,9 @@ async def create_user(org_id: str, payload: UserCreate,
     existing = await db.users.find_one({"email": payload.email_address})
     if existing:
         return resource_conflict_response("Email Already Exists")
+    
+    if payload.role not in ("reader", "writer", "admin"):
+        return bad_request_response("Invalid 'role' specified")
     
     # Convert password to bytes and hash it
     password = generate_random_password(10)
