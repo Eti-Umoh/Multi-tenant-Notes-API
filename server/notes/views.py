@@ -1,13 +1,14 @@
 from fastapi import APIRouter, status
-from server.users.models import UserCreate
+from server.notes.models import NoteCreate
 from server.db import db
 from server.main_utils import (give_pagination_details, success_response,
-                               un_authenticated_response)
+                               un_authenticated_response, un_authorized_response,
+                               created_response)
 from datetime import datetime, timezone
 from server.authentication.utils import authorize_jwt_subject
 from bson import ObjectId
 from fastapi.params import Depends
-from server.users.serializers import users_serializer
+from server.notes.serializers import note_serializer, notes_serializer
 from fastapi_pagination import Params, paginate
 from typing import Optional
 
@@ -24,38 +25,17 @@ async def create_note(payload: NoteCreate,
         msg = "User not found"
         return un_authenticated_response(msg)
     
-    # ensure org exists
-    org = await db.organizations.find_one({"_id": ObjectId(org_id)})
-    if not org:
-        return resource_not_found_response("Organization not found")
-    
-    if str(current_user["organization_id"]) != org_id:
-        msg = f"You Are Not Part Of The Organization :{org_id}"
+    if current_user["role"] not in ("admin", "writer"):
+        msg = "Access Denied"
         return un_authorized_response(msg)
-    
-    if current_user["role"] != "admin":
-        msg = "Only Admins can add new users"
-        return un_authorized_response(msg)
-
-    existing = await db.users.find_one({"email_address": payload.email_address})
-    if existing:
-        return resource_conflict_response("Email Already Exists")
-    
-    # Convert password to bytes and hash it
-    password = generate_random_password(10)
-    hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
 
     # create the organization document
-    user_doc = payload.model_dump()
-    user_doc["organization_id"] = ObjectId(org_id)
-    user_doc["created_at"] = datetime.now(timezone.utc)
-    user_doc["password"] = hashed
-    result = await db.users.insert_one(user_doc)
-    user_id = result.inserted_id
-    user = await db.users.find_one({"_id": user_id})
+    note_doc = payload.model_dump()
+    note_doc["organization_id"] = current_user["organization_id"]
+    note_doc["created_at"] = datetime.now(timezone.utc)
+    note_doc["created_by"] = current_user["_id"]
+    result = await db.notes.insert_one(note_doc)
+    note_id = result.inserted_id
+    note = await db.notes.find_one({"_id": note_id})
 
-    data_dict = {
-        "user": await user_serializer(user),
-        "password": password
-    }
-    return created_response(message="success", body=data_dict)
+    return created_response(message="success", body=await note_serializer(note))
