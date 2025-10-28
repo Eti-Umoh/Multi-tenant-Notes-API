@@ -16,6 +16,7 @@ A FastAPI-based **multi-tenant Notes API** where multiple organizations can mana
 **Additions Made**
 - Email notification for new user credentials (via Mailjet)
 - Endpoint to retrieve all users of an organization
+- Access Control for "Create User" endpoint (Only Admins can create a new user)
 
 
 ## 🧠 Core Requirements Implemented
