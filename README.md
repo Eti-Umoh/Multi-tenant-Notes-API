@@ -64,11 +64,11 @@ A FastAPI-based **multi-tenant Notes API** where multiple organizations can mana
 
 
 You can test the API via **Postman**
-### 👉 Using Postman
+## 👉 Using Postman
 Import the Postman collection file provided in this Github Repository:
 [`Multi-tenant note API.postman_collection.json`]
 
-#### How to use:
+## How to use:
 1. Open Postman.
 2. Click **Import** → **File**.
 3. Select the downloaded `Multi-tenant note API.postman_collection.json`.
