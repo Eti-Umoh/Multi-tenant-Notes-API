@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field, EmailStr
 from bson import ObjectId
 from typing import Optional
 from datetime import datetime, timezone
-from server.common import PyObjectId  # from our earlier step
+from server.common import PyObjectId
 
 class OrganizationCreate(BaseModel):
     name: str

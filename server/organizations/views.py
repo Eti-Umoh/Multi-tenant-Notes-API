@@ -2,13 +2,11 @@ from fastapi import APIRouter, status, Request
 from server.organizations.models import OrganizationCreate
 from server.db import db
 from server.main_utils import (resource_conflict_response, created_response,
-                               resource_not_found_response, un_authenticated_response,
-                               un_authorized_response, bad_request_response)
+                               resource_not_found_response, un_authorized_response)
 from datetime import datetime, timezone
-from server.authentication.utils import generate_random_password, authorize_jwt_subject
+from server.authentication.utils import generate_random_password
 import bcrypt
 from server.users.models import UserCreate
-from fastapi.params import Depends
 from bson import ObjectId
 from server.organizations.serializers import org_serializer
 from server.users.serializers import user_serializer
@@ -19,10 +17,6 @@ router = APIRouter()
 
 @router.post('', status_code=status.HTTP_201_CREATED)
 async def create_organization(payload: OrganizationCreate):
-    # check if organization already exists
-    existing = await db.organizations.find_one({"name": payload.name})
-    if existing:
-        return resource_conflict_response("Organization already exists") 
 
     # create the organization document
     org_doc = payload.model_dump()

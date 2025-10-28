@@ -1,9 +1,6 @@
 from fastapi import APIRouter, status, Request
 from server.db import db
-from server.main_utils import (give_pagination_details, success_response,
-                               un_authenticated_response)
-from server.authentication.utils import authorize_jwt_subject
-from fastapi.params import Depends
+from server.main_utils import (give_pagination_details, success_response)
 from server.users.serializers import users_serializer
 from fastapi_pagination.utils import disable_installed_extensions_check
 from fastapi_pagination import Params, paginate

@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime, timezone
 from server.common import PyObjectId
 
+
 class NoteCreate(BaseModel):
     title: str
     content: str

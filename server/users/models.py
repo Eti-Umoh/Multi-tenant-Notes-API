@@ -1,9 +1,8 @@
 # server/models/user.py
 from pydantic import BaseModel, EmailStr, Field
 from typing import Literal
-from bson import ObjectId
 from datetime import datetime, timezone
-from server.common import PyObjectId  # from our earlier step
+from server.common import PyObjectId
 
 
 Role = Literal["reader", "writer", "admin"]

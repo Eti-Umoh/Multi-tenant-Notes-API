@@ -5,8 +5,7 @@ from server.users.views import router as UserRouter
 from server.authentication.views import router as AuthRouter
 from server.organizations.views import router as OrgRouter
 from server.notes.views import router as NoteRouter
-from server.config import settings
-from server.main_utils import error_response, resource_not_found_response
+from server.main_utils import error_response
 from server.db import db
 from bson import ObjectId
 from server.authentication.utils import authorize_jwt_subject

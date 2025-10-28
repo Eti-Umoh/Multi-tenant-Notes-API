@@ -2,13 +2,11 @@ from fastapi import APIRouter, status, Request
 from server.notes.models import NoteCreate
 from server.db import db
 from server.main_utils import (give_pagination_details, success_response,
-                               un_authenticated_response, un_authorized_response,
+                               un_authorized_response,
                                created_response, bad_request_response,
                                resource_not_found_response)
 from datetime import datetime, timezone
-from server.authentication.utils import authorize_jwt_subject
 from bson import ObjectId
-from fastapi.params import Depends
 from server.notes.serializers import note_serializer, notes_serializer
 from fastapi_pagination.utils import disable_installed_extensions_check
 from fastapi_pagination import Params, paginate
