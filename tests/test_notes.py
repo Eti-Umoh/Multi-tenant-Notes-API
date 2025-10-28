@@ -2,7 +2,8 @@ import pytest
 from httpx import AsyncClient, ASGITransport
 from server.main import app
 
-
+#TEST FOR 5️⃣ ENDPOINTS
+#1. create_organization, 2. login_user, 3. create_user, 4. create_note, 5. get_notes
 @pytest.mark.asyncio
 async def test_create_and_get_notes():
     transport = ASGITransport(app=app)
@@ -31,7 +32,7 @@ async def test_create_and_get_notes():
         user_payload = {
             "first_name": "John",
             "last_name": "Doe",
-            "email_address": "johndoe@mailinator.com",
+            "email_address": "john01@mailinator.com",
             "role": "admin"
         }
         user_response = await ac.post(f"/api/v1/organizations/{org_id}/users",
