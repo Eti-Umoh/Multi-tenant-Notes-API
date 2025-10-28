@@ -6,6 +6,7 @@ class Settings(BaseSettings):
     ALGORITHM: str
     MONGO_URL: str
     DB_NAME: str
+    SENDER_EMAIL: str
     MAILJET_API_KEY: str
     MAILJET_SECRET_KEY: str
     class Config:
