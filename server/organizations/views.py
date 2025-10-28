@@ -12,6 +12,7 @@ from fastapi.params import Depends
 from bson import ObjectId
 from server.organizations.serializers import org_serializer
 from server.users.serializers import user_serializer
+from server.external_connectors import send_email
 
 router = APIRouter()
 

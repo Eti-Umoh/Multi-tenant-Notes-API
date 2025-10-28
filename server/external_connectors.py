@@ -19,8 +19,8 @@ async def send_email(email, password):
                             },
                             "To": [
                                     {
-                                            "Email": "$RECIPIENT_EMAIL",
-                                            "Name": "You"
+                                            "Email": email,
+                                            "Name": "New User"
                                     }
                             ],
                             "Subject": "Account Created",
