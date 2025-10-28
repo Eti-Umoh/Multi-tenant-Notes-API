@@ -8,10 +8,14 @@ A FastAPI-based **multi-tenant Notes API** where multiple organizations can mana
 - Role-based permissions (`reader`, `writer`, `admin`)
 - JWT authentication
 - Automatic admin user creation per organization
-- Email notification for new user credentials (via Mailjet)
 - Docker support for local deployment
 - Async MongoDB (Motor)
 - Unit tests using `pytest` and `httpx`
+
+
+**Additions Made**
+- Email notification for new user credentials (via Mailjet)
+- Endpoint to retrieve all users of an organization
 
 
 ## 🧠 Core Requirements Implemented
@@ -33,7 +37,7 @@ A FastAPI-based **multi-tenant Notes API** where multiple organizations can mana
 - **Pytest + HTTPX** (testing)
 
 
-## Instructions to run your app locally (or via Docker)
+## Instructions to run the app locally (or via Docker)
 1. Clone the repository, then run the command:
     **cd Multi-tenant-Notes-API**
 
@@ -70,9 +74,11 @@ Import the Postman collection file provided in this Github Repository:
 4. Run the requests directly.
 
 
-**NOTE:** - While working with Postman, all requests except "create org" require an "org_id" in the headers.
-All requests except "create org" and "login" require a bearer token in the headers. 
+**NOTE:** - While working with Postman, all requests except "create organization" require an "org_id" in the headers.
+All requests except "create organization" and "login" require a bearer token in the headers. 
 
-**NOTE** - While running tests with **python -m pytest -v** ,
-In tests/test_notes.py, the 3rd endpoint in the test function will always fail if "email_address" is reused OR
-if the credentials from the 2nd endpoint are not for an admin user
+**NOTE** - While running tests with **python -m pytest -v** , In tests/test_notes.py,
+the 3rd endpoint (create user) in the "test_create_and_get_notes" function will cause the test to fail if the same "email_address"
+is used in the "user_payload" more than once, this is because an organization can not have users with the same email address.
+Also, for the 2nd endpoint (login) in the "test_create_and_get_notes" function, if the credentials in the "login_payload" are not
+for an admin user the test will fail, this is because only an admin user can create a new user in the 3rd endpoint.
