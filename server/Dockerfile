@@ -1,15 +1,22 @@
 # Dockerfile
-FROM python:3.10-slim-buster
 
-RUN apt-get update && \
-    apt-get install -y && \
-    python -m pip install --upgrade pip
+# Use a lightweight Python base image
+FROM python:3.11-slim
 
-COPY . /app
+# Set working directory inside container
 WORKDIR /app
 
-RUN pip install -r requirements.txt
+# Copy dependency list
+COPY requirements.txt .
 
+# Install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy all source code
+COPY . .
+
+# Expose FastAPI default port
 EXPOSE 8000
 
-CMD ["uvicorn", "server.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+# Run the app
+CMD ["uvicorn", "server.main:app", "--host", "0.0.0.0", "--port", "8000"]
