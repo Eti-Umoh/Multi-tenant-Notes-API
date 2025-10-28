@@ -38,6 +38,25 @@ A FastAPI-based **multi-tenant Notes API** where multiple organizations can mana
 - **Pytest + HTTPX** (testing)
 
 
+## ⭐ Bonus Points
+**I Passed All The Criteria For Bonus Points:**
+- Middleware that automatically extracts tenant/user from headers ✅
+    (View middleware in server/main.py)
+
+- Clean and layered architecture ✅
+    (I went with a django-project-structure with the 'server' folder and then separate apps in 'server' like
+    users, notes, organizations, etc. And also files in each app (folder) like models.py, views.py, etc.)
+
+- Proper error handling with descriptive responses ✅
+    (View error handlers in server/main_utils.py)
+ 
+- Dockerfile or docker-compose setup ✅
+    (View Dockerfile and docker-compose.yml)
+
+- Additional test coverage ✅
+    (View tests/test_notes.py)
+
+
 ## Instructions to run the app locally (or via Docker)
 1. Clone the repository, then run the command:
     **cd Multi-tenant-Notes-API**
