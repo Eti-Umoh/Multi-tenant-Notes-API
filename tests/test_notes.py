@@ -4,6 +4,7 @@ from server.main import app
 
 #TEST FOR 5️⃣ ENDPOINTS
 #1. create_organization, 2. login_user, 3. create_user, 4. create_note, 5. get_notes
+
 @pytest.mark.asyncio
 async def test_create_and_get_notes():
     transport = ASGITransport(app=app)
