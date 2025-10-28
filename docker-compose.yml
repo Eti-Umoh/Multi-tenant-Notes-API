@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    command: ["uvicorn", "server.main:app", "--host", "0.0.0.0", "--port", "7000", "--workers", "4"]
+    container_name: notes-api
+    restart: on-failure
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 7000:7000
