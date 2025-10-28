@@ -1,6 +1,7 @@
 from fastapi import APIRouter, status, Request
 from server.db import db
-from server.main_utils import (give_pagination_details, success_response)
+from server.main_utils import (give_pagination_details, success_response,
+                               un_authorized_response)
 from server.users.serializers import users_serializer
 from fastapi_pagination.utils import disable_installed_extensions_check
 from fastapi_pagination import Params, paginate
@@ -12,7 +13,11 @@ router = APIRouter()
 @router.get('', status_code=status.HTTP_200_OK)
 async def get_users_by_org(request: Request, page: Optional[int] = 1,
                            page_by: Optional[int] = 20):
-    org = request.state.org 
+    org = request.state.org
+    current_user = request.state.user
+    if current_user["role"] not in ("admin", "writer", "reader"):
+        msg = "Access Denied"
+        return un_authorized_response(msg)
 
     # Fetch users belonging to the organization
     users_cursor = db.users.find({"organization_id": org["_id"]})
