@@ -10,6 +10,7 @@ from server.authentication.utils import authorize_jwt_subject
 from bson import ObjectId
 from fastapi.params import Depends
 from server.notes.serializers import note_serializer, notes_serializer
+from fastapi_pagination.utils import disable_installed_extensions_check
 from fastapi_pagination import Params, paginate
 from typing import Optional
 
@@ -45,6 +46,7 @@ async def get_notes(request: Request, page: Optional[int] = 1,
     notes_cursor = db.notes.find({"organization_id": org["_id"]})
     notes = await notes_cursor.to_list(length=page_by)
 
+    disable_installed_extensions_check()
     paginated_notes = paginate(notes, params=Params(page=page, size=page_by))
     pagination_details = give_pagination_details(paginated_notes)
 

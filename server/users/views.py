@@ -5,6 +5,7 @@ from server.main_utils import (give_pagination_details, success_response,
 from server.authentication.utils import authorize_jwt_subject
 from fastapi.params import Depends
 from server.users.serializers import users_serializer
+from fastapi_pagination.utils import disable_installed_extensions_check
 from fastapi_pagination import Params, paginate
 from typing import Optional
 
@@ -20,6 +21,7 @@ async def get_users_by_org(request: Request, page: Optional[int] = 1,
     users_cursor = db.users.find({"organization_id": org["_id"]})
     users = await users_cursor.to_list(length=page_by)
 
+    disable_installed_extensions_check()
     paginated_users = paginate(users, params=Params(page=page, size=page_by))
     pagination_details = give_pagination_details(paginated_users)
 
