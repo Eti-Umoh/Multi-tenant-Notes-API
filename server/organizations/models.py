@@ -7,6 +7,7 @@ from server.common import PyObjectId  # from our earlier step
 class OrganizationCreate(BaseModel):
     name: str
     description: Optional[str] = None
+    admin_email: str
 
 
 class OrganizationOut(BaseModel):
