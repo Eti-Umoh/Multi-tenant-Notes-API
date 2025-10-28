@@ -1,0 +1,12 @@
+services:
+  api:
+    build: .
+    command: ["uvicorn", "server.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    container_name: notes-api
+    restart: on-failure
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - 8000:8000
+    env_file:
+      - ./server/.env

@@ -1,0 +1,90 @@
+from fastapi import APIRouter, status, Request
+from server.organizations.models import OrganizationCreate
+from server.db import db
+from server.main_utils import (resource_conflict_response, created_response,
+                               resource_not_found_response, un_authorized_response)
+from datetime import datetime, timezone
+from server.authentication.utils import generate_random_password
+import bcrypt
+from server.users.models import UserCreate
+from bson import ObjectId
+from server.organizations.serializers import org_serializer
+from server.users.serializers import user_serializer
+from server.external_connectors import send_email
+
+router = APIRouter()
+
+
+@router.post('', status_code=status.HTTP_201_CREATED)
+async def create_organization(payload: OrganizationCreate):
+
+    # create the organization document
+    org_doc = payload.model_dump(exclude={"admin_email"})
+    org_doc["created_at"] = org_doc["updated_at"] = datetime.now(timezone.utc)
+    result = await db.organizations.insert_one(org_doc)
+    org_id = result.inserted_id
+
+    # Create initial admin user
+    admin_email = payload.admin_email
+    admin_password = generate_random_password(10)
+    hashed = bcrypt.hashpw(admin_password.encode(), bcrypt.gensalt()).decode()
+    
+    admin_user = {
+        "first_name": "Super",
+        "last_name": "Admin",
+        "email_address": admin_email,
+        "role": "admin",
+        "organization_id": org_id,
+        "created_at": datetime.now(timezone.utc),
+        "password": hashed
+    }
+
+    await db.users.insert_one(admin_user)
+    org = await db.organizations.find_one({"_id": org_id})
+
+    await send_email(admin_email, admin_password)
+
+    return created_response(message="successfully created org",
+                            body=await org_serializer(org))
+
+
+@router.post('/{org_id}/users', status_code=status.HTTP_201_CREATED)
+async def create_user(request:Request, org_id: str, payload: UserCreate):
+    current_user = request.state.user
+    
+    # ensure org exists
+    org = await db.organizations.find_one({"_id": ObjectId(org_id)})
+    if not org:
+        return resource_not_found_response("Organization not found")
+    
+    if str(current_user["organization_id"]) != org_id:
+        msg = f"You Are Not Part Of The Organization :{org_id}"
+        return un_authorized_response(msg)
+    
+    if current_user["role"] != "admin":
+        msg = "Only Admins can add new users"
+        return un_authorized_response(msg)
+
+    existing = await db.users.find_one({
+            "email_address": payload.email_address,
+            "organization_id": ObjectId(org_id)
+            })
+    if existing:
+        return resource_conflict_response("Email Already Exists")
+    
+    # Convert password to bytes and hash it
+    password = generate_random_password(10)
+    hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+    # create the user document
+    user_doc = payload.model_dump()
+    user_doc["organization_id"] = ObjectId(org_id)
+    user_doc["created_at"] = datetime.now(timezone.utc)
+    user_doc["password"] = hashed
+    result = await db.users.insert_one(user_doc)
+    user_id = result.inserted_id
+    user = await db.users.find_one({"_id": user_id})
+
+    await send_email(payload.email_address, password)
+
+    return created_response(message="success", body=await user_serializer(user))
