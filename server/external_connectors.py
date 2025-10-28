@@ -24,9 +24,10 @@ async def send_email(email, password):
                                     }
                             ],
                             "Subject": "Account Created",
-                            "TextPart": "Hello, welcome",
-                            "HTMLPart": f"""<h4>Use the following credentials below to login:</h4>\
-                                <br/><h3>email address:{email}</h3><br/><h3>password:{password}</h3>"""
+                            "TextPart": f"Hello, welcome. Use the following credentials to login:\
+                                email address:{email}, password:{password}",
+                            "HTMLPart": f"""<h3>Hello, welcome.</h3><br/><h4>Use the following credentials below to login:</h4>\
+                                <br/><h4>email address:{email}</h4><br/><h4>password:{password}</h4>"""
                         }
                 ]
         }
