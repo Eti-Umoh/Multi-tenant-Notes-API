@@ -91,8 +91,6 @@ async def create_user(request:Request, org_id: str, payload: UserCreate):
     user_id = result.inserted_id
     user = await db.users.find_one({"_id": user_id})
 
-    data_dict = {
-        "user": await user_serializer(user),
-        "password": password
-    }
-    return created_response(message="success", body=data_dict)
+    await send_email(payload.email_address, password)
+
+    return created_response(message="success", body=await user_serializer(user))
