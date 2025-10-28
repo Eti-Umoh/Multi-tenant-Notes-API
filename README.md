@@ -1,1 +1,58 @@
-# Multi-tenant-Notes-API
+# 📝 Multi-Tenant Notes API
+
+A FastAPI-based **multi-tenant Notes API** where multiple organizations can manage their users and notes independently — with strict **role-based access control (RBAC)**.
+
+
+## 🚀 Features
+- Multi-tenancy with organization isolation
+- Role-based permissions (`reader`, `writer`, `admin`)
+- JWT authentication
+- Automatic admin user creation per organization
+- Email notification for new user credentials (via Mailjet)
+- Docker support for local deployment
+- Async MongoDB (Motor)
+- Unit tests using `pytest` and `httpx`
+
+
+## 🧠 Core Requirements Implemented
+**Organizations** - Create new organizations (tenants). 
+**Users** - Create users under specific organizations with roles (`reader`, `writer`, `admin`). 
+**Notes** - CRUD operations based on roles. Notes are scoped per organization. 
+**Access Control** - Role-based logic ensures isolation between organizations. 
+**Testing** - Includes automated test with `pytest`. 
+**Dockerized** - App runs fully via Docker for easy setup. 
+
+
+## ⚙️ Tech Stack
+- **Python** (programming language)
+- **FastAPI** (backend framework)
+- **MongoDB Atlas** (database)
+- **Motor** (async MongoDB driver)
+- **Mailjet API** (email service)
+- **Docker & Docker Compose** (running)
+- **Pytest + HTTPX** (testing)
+
+
+## Instructions to run your app locally (or via Docker)
+1. Clone the repository, then run the command:
+    **cd Multi-tenant-Notes-API**
+
+2. Create a virtual environment (optional) with this command:
+    python -m venv venv
+  Activate if necessary:
+    source venv/bin/activate   # (Mac/Linux)
+    venv\Scripts\activate      # (Windows)
+
+3. Install dependencies with this command:
+    **pip install -r requirements.txt**
+
+4. Configure environment variables, Create a .env file.
+    Copy from .env.example and Update the values with your values
+
+5. Run with Docker the command:
+    **docker compose up --build**
+  OR Run locally with the command:
+    **uvicorn server.main:app**
+
+6. Run tests with this command:
+    **python -m pytest -v**  

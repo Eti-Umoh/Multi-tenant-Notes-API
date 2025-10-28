@@ -1,0 +1,796 @@
+{
+	"info": {
+		"_postman_id": "6f961b36-57f0-4864-aef0-aec239d85708",
+		"name": "Multi-tenant note API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39164181"
+	},
+	"item": [
+		{
+			"name": "Create Organization",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"Godolkin-seven\",\r\n    \"description\": \"University for super powered youths\",\r\n    \"admin_email\": \"mister04@mailinator.com\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/v1/organizations",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"organizations"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Godolkin-seven\",\r\n    \"description\": \"University for super powered youths\",\r\n    \"admin_email\": \"mister04@mailinator.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/v1/organizations",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"organizations"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Tue, 28 Oct 2025 14:33:03 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "227"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"id\": \"6900d42043a0324a9862bb91\",\n        \"name\": \"Godolkin-seven\",\n        \"description\": \"University for super powered youths\",\n        \"created_at\": \"Oct 28, 2025 02:33PM\",\n        \"updated_at\": \"Oct 28, 2025 02:33PM\"\n    },\n    \"message\": \"successfully created org\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "org_id",
+						"value": "68ff992a0639bb282372c702",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email_address\": \"admin@godolkin-four.com\",\r\n    \"password\": \"uyugTDCQU6\"\r\n}\r\n// {\r\n//     \"email_address\": \"admin@godolkin-five.com\",\r\n//     \"password\": \"HEO56loisc\"\r\n// }\r\n// {\r\n//     \"email_address\": \"mister@mailinator.com\",\r\n//     \"password\": \"9W53kCSX4R\"\r\n// }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/v1/auth/login",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "org_id",
+								"value": "68ff992a0639bb282372c702",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email_address\": \"admin@godolkin-four.com\",\r\n    \"password\": \"uyugTDCQU6\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/v1/auth/login",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Mon, 27 Oct 2025 22:51:17 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "441"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"user\": {\n            \"id\": \"68ff992b0639bb282372c703\",\n            \"first_name\": \"Super\",\n            \"last_name\": \"Admin\",\n            \"email_address\": \"admin@godolkin-four.com\",\n            \"role\": \"admin\",\n            \"organization_id\": \"68ff992a0639bb282372c702\",\n            \"created_at\": \"Oct 27, 2025 04:09PM\"\n        },\n        \"access-token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnb2RvbGtpbi1mb3VyLmNvbSIsImV4cCI6MTc2MTYwOTA4M30.CG_J_CidSg4DTJ9kHKYlyJcf-imswdQD0fqGkhqY0yg\",\n        \"token_type\": \"bearer\"\n    },\n    \"message\": \"successful\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnb2RvbGtpbi1mb3VyLmNvbSIsImV4cCI6MTc2MTY2NTY3NX0.IDF17acsre6yY1Em5-3ReNlDPlkybLBM4M5xa2G18-A",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "org_id",
+						"value": "68ff992a0639bb282372c702",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"first_name\": \"Lois\",\r\n    \"last_name\": \"Lane\",\r\n    \"email_address\": \"lois@mailinator.com\",\r\n    \"role\": \"writer\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/v1/organizations/68ff992a0639bb282372c702/users",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"organizations",
+						"68ff992a0639bb282372c702",
+						"users"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "org_id",
+								"value": "68ff992a0639bb282372c702",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"Lois\",\r\n    \"last_name\": \"Lane\",\r\n    \"email_address\": \"lois@mailinator.com\",\r\n    \"role\": \"writer\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/v1/organizations/68ff992a0639bb282372c702/users",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"organizations",
+								"68ff992a0639bb282372c702",
+								"users"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "date",
+							"value": "Tue, 28 Oct 2025 14:35:17 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "236"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"id\": \"6900d4a643a0324a9862bb93\",\n        \"first_name\": \"Lois\",\n        \"last_name\": \"Lane\",\n        \"email_address\": \"lois@mailinator.com\",\n        \"role\": \"writer\",\n        \"organization_id\": \"68ff992a0639bb282372c702\",\n        \"created_at\": \"Oct 28, 2025 02:35PM\"\n    },\n    \"message\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Users",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnb2RvbGtpbi1mb3VyLmNvbSIsImV4cCI6MTc2MTY2MTI3NH0.mElsR-nUvWhFVp-qGUD66RyOwT7XbivhPPkFTfnep-4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "org_id",
+						"value": "68ff992a0639bb282372c702",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8000/api/v1/users?page=1&page_by=10",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"users"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1"
+						},
+						{
+							"key": "page_by",
+							"value": "10"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "org_id",
+								"value": "69000184f62a49aac6483fd2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8000/api/v1/users?page=1&page_by=10",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"users"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_by",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Mon, 27 Oct 2025 23:42:58 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "543"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        {\n            \"id\": \"69000184f62a49aac6483fd3\",\n            \"first_name\": \"Super\",\n            \"last_name\": \"Admin\",\n            \"email_address\": \"admin@godolkin-five.com\",\n            \"role\": \"admin\",\n            \"organization_id\": \"69000184f62a49aac6483fd2\",\n            \"created_at\": \"Oct 27, 2025 11:34PM\"\n        },\n        {\n            \"id\": \"690002abf62a49aac6483fd4\",\n            \"first_name\": \"Wally\",\n            \"last_name\": \"West\",\n            \"email_address\": \"wally@mailinator.com\",\n            \"role\": \"reader\",\n            \"organization_id\": \"69000184f62a49aac6483fd2\",\n            \"created_at\": \"Oct 27, 2025 11:39PM\"\n        }\n    ],\n    \"message\": \"Successfully retrieved users\",\n    \"pagination\": {\n        \"total_pages\": 1,\n        \"limit\": 10,\n        \"count\": 2,\n        \"current_page\": 1\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Create Note",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnb2RvbGtpbi1maXZlLmNvbSIsImV4cCI6MTc2MTYxMTgyNH0.-kCDLu71v9XontJEiqUN_qYlNP4APJ2VNEr_QV8u3xE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "org_id",
+						"value": "69000184f62a49aac6483fd2",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"title\": \"3rd note\",\r\n    \"content\": \"The content of the 3rd note.\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8000/api/v1/notes",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"notes"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "org_id",
+								"value": "69000184f62a49aac6483fd2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"2nd note\",\r\n    \"content\": \"The content of the 2nd note.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8000/api/v1/notes",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"notes"
+							]
+						}
+					},
+					"status": "Created",
+					"code": 201,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Mon, 27 Oct 2025 23:45:23 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "243"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"id\": \"69000413f62a49aac6483fd6\",\n        \"title\": \"2nd note\",\n        \"content\": \"The content of the 2nd note.\",\n        \"created_by\": \"69000184f62a49aac6483fd3\",\n        \"organization_id\": \"69000184f62a49aac6483fd2\",\n        \"created_at\": \"Oct 27, 2025 11:45PM\"\n    },\n    \"message\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get all Notes",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnb2RvbGtpbi1maXZlLmNvbSIsImV4cCI6MTc2MTYxMTgyNH0.-kCDLu71v9XontJEiqUN_qYlNP4APJ2VNEr_QV8u3xE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "org_id",
+						"value": "69000184f62a49aac6483fd2",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8000/api/v1/notes",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"notes"
+					],
+					"query": [
+						{
+							"key": "page",
+							"value": "1",
+							"disabled": true
+						},
+						{
+							"key": "page_by",
+							"value": "10",
+							"disabled": true
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "org_id",
+								"value": "68ff992a0639bb282372c702",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8000/api/v1/notes",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"notes"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "page_by",
+									"value": "10",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Mon, 27 Oct 2025 22:59:12 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "1188"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": [\n        {\n            \"id\": \"68ffc5135926e916444077e8\",\n            \"title\": \"First note\",\n            \"content\": \"The content of the first note.\",\n            \"created_by\": \"68ff992b0639bb282372c703\",\n            \"organization_id\": \"68ff992a0639bb282372c702\",\n            \"created_at\": \"Oct 27, 2025 07:16PM\"\n        },\n        {\n            \"id\": \"68ffc5645926e916444077e9\",\n            \"title\": \"Second note\",\n            \"content\": \"The content of the second note.\",\n            \"created_by\": \"68ff992b0639bb282372c703\",\n            \"organization_id\": \"68ff992a0639bb282372c702\",\n            \"created_at\": \"Oct 27, 2025 07:17PM\"\n        },\n        {\n            \"id\": \"68ffc5905926e916444077ea\",\n            \"title\": \"Third note\",\n            \"content\": \"The content of the third note.\",\n            \"created_by\": \"68ff992b0639bb282372c703\",\n            \"organization_id\": \"68ff992a0639bb282372c702\",\n            \"created_at\": \"Oct 27, 2025 07:18PM\"\n        },\n        {\n            \"id\": \"68ffc59a5926e916444077eb\",\n            \"title\": \"4th note\",\n            \"content\": \"The content of the 4th note.\",\n            \"created_by\": \"68ff992b0639bb282372c703\",\n            \"organization_id\": \"68ff992a0639bb282372c702\",\n            \"created_at\": \"Oct 27, 2025 07:18PM\"\n        },\n        {\n            \"id\": \"68ffc5a55926e916444077ec\",\n            \"title\": \"5th note\",\n            \"content\": \"The content of the 5th note.\",\n            \"created_by\": \"68ff992b0639bb282372c703\",\n            \"organization_id\": \"68ff992a0639bb282372c702\",\n            \"created_at\": \"Oct 27, 2025 07:19PM\"\n        }\n    ],\n    \"message\": \"success\",\n    \"pagination\": {\n        \"total_pages\": 1,\n        \"limit\": 20,\n        \"count\": 5,\n        \"current_page\": 1\n    }\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Note",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnb2RvbGtpbi1mb3VyLmNvbSIsImV4cCI6MTc2MTYwOTA4M30.CG_J_CidSg4DTJ9kHKYlyJcf-imswdQD0fqGkhqY0yg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "org_id",
+						"value": "68ff992a0639bb282372c702",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8000/api/v1/notes/68ffc59a5926e916444077eb",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"notes",
+						"68ffc59a5926e916444077eb"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "org_id",
+								"value": "68ff992a0639bb282372c702",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8000/api/v1/notes/68ffc59a5926e916444077eb",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"notes",
+								"68ffc59a5926e916444077eb"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "date",
+							"value": "Mon, 27 Oct 2025 23:30:27 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "243"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json",
+							"description": "",
+							"type": "text"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {\n        \"id\": \"68ffc59a5926e916444077eb\",\n        \"title\": \"4th note\",\n        \"content\": \"The content of the 4th note.\",\n        \"created_by\": \"68ff992b0639bb282372c703\",\n        \"organization_id\": \"68ff992a0639bb282372c702\",\n        \"created_at\": \"Oct 27, 2025 07:18PM\"\n    },\n    \"message\": \"success\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Delete Note",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBnb2RvbGtpbi1maXZlLmNvbSIsImV4cCI6MTc2MTYxMTgyNH0.-kCDLu71v9XontJEiqUN_qYlNP4APJ2VNEr_QV8u3xE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "org_id",
+						"value": "69000184f62a49aac6483fd2",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "localhost:8000/api/v1/notes/690004cef62a49aac6483fd7",
+					"host": [
+						"localhost"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"v1",
+						"notes",
+						"690004cef62a49aac6483fd7"
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Success",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "org_id",
+								"value": "69000184f62a49aac6483fd2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "localhost:8000/api/v1/notes/690004cef62a49aac6483fd7",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"api",
+								"v1",
+								"notes",
+								"690004cef62a49aac6483fd7"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": null,
+					"header": [
+						{
+							"key": "date",
+							"value": "Mon, 27 Oct 2025 23:48:46 GMT"
+						},
+						{
+							"key": "server",
+							"value": "uvicorn"
+						},
+						{
+							"key": "content-length",
+							"value": "49"
+						},
+						{
+							"key": "content-type",
+							"value": "application/json"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"data\": {},\n    \"message\": \"Note deleted successfully\"\n}"
+				}
+			]
+		}
+	]
+}
