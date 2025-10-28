@@ -48,16 +48,10 @@ async def create_organization(payload: OrganizationCreate):
     await db.users.insert_one(admin_user)
     org = await db.organizations.find_one({"_id": org_id})
 
-    data_dict = {
-        "organization": await org_serializer(org),
-        "super_admin": {
-            "email_address": admin_email,
-            "password": admin_password,
-        }
-    }
+    await send_email(admin_email, admin_password)
 
     return created_response(message="successfully created org",
-                            body=data_dict)
+                            body=await org_serializer(org))
 
 
 @router.post('/{org_id}/users', status_code=status.HTTP_201_CREATED)
