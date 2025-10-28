@@ -2,8 +2,6 @@ from fastapi import HTTPException, status
 from fastapi.responses import JSONResponse
 from http import HTTPStatus
 import pytz
-from datetime import datetime
-
 
 
 def bad_request_response(msg):
