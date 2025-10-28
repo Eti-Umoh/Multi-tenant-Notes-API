@@ -56,3 +56,23 @@ A FastAPI-based **multi-tenant Notes API** where multiple organizations can mana
 
 6. Run tests with this command:
     **python -m pytest -v**  
+
+
+You can test the API via **Postman**
+### 👉 Using Postman
+Import the Postman collection file provided in this Github Repository:
+[`Multi-tenant note API.postman_collection.json`]
+
+#### How to use:
+1. Open Postman.
+2. Click **Import** → **File**.
+3. Select the downloaded `Multi-tenant note API.postman_collection.json`.
+4. Run the requests directly.
+
+
+**NOTE:** - While working with Postman, all requests except "create org" require an "org_id" in the headers.
+All requests except "create org" and "login" require a bearer token in the headers. 
+
+**NOTE** - While running tests with **python -m pytest -v** ,
+In tests/test_notes.py, the 3rd endpoint in the test function will always fail if "email_address" is reused OR
+if the credentials from the 2nd endpoint are not for an admin user
