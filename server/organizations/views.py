@@ -19,7 +19,7 @@ router = APIRouter()
 async def create_organization(payload: OrganizationCreate):
 
     # create the organization document
-    org_doc = payload.model_dump()
+    org_doc = payload.model_dump(exclude={"admin_email"})
     org_doc["created_at"] = org_doc["updated_at"] = datetime.now(timezone.utc)
     result = await db.organizations.insert_one(org_doc)
     org_id = result.inserted_id

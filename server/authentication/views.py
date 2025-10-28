@@ -32,5 +32,5 @@ async def login_user(request: Request, payload: LoginUser):
 
     return success_response(message="successful",
                             body={"user": await user_serializer(user),
-                                  "access-token": access_token,
+                                  "access_token": access_token,
                                   "token_type": "bearer"})
