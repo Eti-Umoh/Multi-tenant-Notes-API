@@ -54,7 +54,7 @@ A FastAPI-based **multi-tenant Notes API** where multiple organizations can mana
 4. Configure environment variables, Create a .env file.
     Copy from .env.example and Update the values with your values
 
-5. Run with Docker the command:
+5. Run with Docker with the command:
     **docker compose up --build**
   OR Run locally with the command:
     **uvicorn server.main:app**
