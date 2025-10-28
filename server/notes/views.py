@@ -38,7 +38,11 @@ async def create_note(request: Request, payload: NoteCreate):
 @router.get('', status_code=status.HTTP_200_OK)
 async def get_notes(request: Request, page: Optional[int] = 1,
                     page_by: Optional[int] = 20):
-    org = request.state.org 
+    org = request.state.org
+    current_user = request.state.user
+    if current_user["role"] not in ("admin", "writer", "reader"):
+        msg = "Access Denied"
+        return un_authorized_response(msg)
 
     # Fetch notes belonging to the organization
     notes_cursor = db.notes.find({"organization_id": org["_id"]})
@@ -54,7 +58,11 @@ async def get_notes(request: Request, page: Optional[int] = 1,
 
 @router.get('/{note_id}', status_code=status.HTTP_200_OK)
 async def get_note(request: Request, note_id:str):
-    org = request.state.org 
+    org = request.state.org
+    current_user = request.state.user
+    if current_user["role"] not in ("admin", "writer", "reader"):
+        msg = "Access Denied"
+        return un_authorized_response(msg)
 
     # Ensure note_id is a valid ObjectId
     if not ObjectId.is_valid(note_id):
