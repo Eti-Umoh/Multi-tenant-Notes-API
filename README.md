@@ -62,16 +62,16 @@ A FastAPI-based **multi-tenant Notes API** where multiple organizations can mana
     **cd Multi-tenant-Notes-API**
 
 2. Create a virtual environment (optional) with this command:
-    python -m venv venv
+    **python -m venv venv**.
   Activate if necessary:
-    source venv/bin/activate   # (Mac/Linux)
-    venv\Scripts\activate      # (Windows)
+    **source venv/bin/activate**   # (Mac/Linux)
+    **venv\Scripts\activate**     # (Windows)
 
 3. Install dependencies with this command:
     **pip install -r requirements.txt**
 
 4. Configure environment variables, Create a .env file.
-    Copy from .env.example and Update the values with your values
+    Ensure the .env file is in the 'server' folder. Copy from .env.example and Update the values.
 
 5. Run with Docker with the command:
     **docker compose up --build**
