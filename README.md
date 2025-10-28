@@ -19,25 +19,6 @@ A FastAPI-based **multi-tenant Notes API** where multiple organizations can mana
 - Access Control for "Create User" endpoint (Only Admins can create a new user)
 
 
-## 🧠 Core Requirements Implemented
-**Organizations** - Create new organizations (tenants). 
-**Users** - Create users under specific organizations with roles (`reader`, `writer`, `admin`). 
-**Notes** - CRUD operations based on roles. Notes are scoped per organization. 
-**Access Control** - Role-based logic ensures isolation between organizations. 
-**Testing** - Includes automated test with `pytest`. 
-**Dockerized** - App runs fully via Docker for easy setup. 
-
-
-## ⚙️ Tech Stack
-- **Python** (programming language)
-- **FastAPI** (backend framework)
-- **MongoDB Atlas** (database)
-- **Motor** (async MongoDB driver)
-- **Mailjet API** (email service)
-- **Docker & Docker Compose** (running)
-- **Pytest + HTTPX** (testing)
-
-
 ## ⭐ Bonus Points
 **I Passed All The Criteria For Bonus Points:**
 - Middleware that automatically extracts tenant/user from headers ✅
@@ -55,6 +36,25 @@ A FastAPI-based **multi-tenant Notes API** where multiple organizations can mana
 
 - Additional test coverage ✅
     (View tests/test_notes.py)
+
+
+## 🧠 Core Requirements Implemented
+**Organizations** - Create new organizations (tenants). 
+**Users** - Create users under specific organizations with roles (`reader`, `writer`, `admin`). 
+**Notes** - CRUD operations based on roles. Notes are scoped per organization. 
+**Access Control** - Role-based logic ensures isolation between organizations. 
+**Testing** - Includes automated test with `pytest`. 
+**Dockerized** - App runs fully via Docker for easy setup.
+
+
+## ⚙️ Tech Stack
+- **Python** (programming language)
+- **FastAPI** (backend framework)
+- **MongoDB Atlas** (database)
+- **Motor** (async MongoDB driver)
+- **Mailjet API** (email service)
+- **Docker & Docker Compose** (running)
+- **Pytest + HTTPX** (testing)
 
 
 ## Instructions to run the app locally (or via Docker)
