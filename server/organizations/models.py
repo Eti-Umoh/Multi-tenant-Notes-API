@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from bson import ObjectId
 from typing import Optional
 from datetime import datetime, timezone
@@ -7,7 +7,7 @@ from server.common import PyObjectId  # from our earlier step
 class OrganizationCreate(BaseModel):
     name: str
     description: Optional[str] = None
-    admin_email: str
+    admin_email: EmailStr
 
 
 class OrganizationOut(BaseModel):

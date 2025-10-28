@@ -31,7 +31,7 @@ async def create_organization(payload: OrganizationCreate):
     org_id = result.inserted_id
 
     # Create initial admin user
-    admin_email = f"admin@{payload.name.lower().replace(' ', '')}.com"
+    admin_email = payload.admin_email
     admin_password = generate_random_password(10)
     hashed = bcrypt.hashpw(admin_password.encode(), bcrypt.gensalt()).decode()
     
