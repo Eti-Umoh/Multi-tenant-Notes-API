@@ -25,7 +25,7 @@ tags_metadata = [
 ]
 
 
-# Initialize FastAPI with the lifespan handler
+# Initialize FastAPI
 app = FastAPI(
     title="Multi-tenant Notes API",
     description="A multi-tenant Notes API where multiple organizations can manage their users\
